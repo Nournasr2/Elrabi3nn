@@ -1,0 +1,1 @@
+Premium ELRABI3_COMPANY branding applied to index.html and cache.html. Original JS execution logic and project files preserved verbatim. Added elrabi3-logo.png to appcache assets.

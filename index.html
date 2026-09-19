@@ -1,0 +1,128 @@
+<!-- ELRABI3_COMPANY visual redesign. Original execution logic preserved below. -->
+<html manifest="cache.appcache">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ELRABI3_COMPANY · PS4 Host</title>
+<style>
+:root{--n:#07152f;--n2:#0d2a61;--b:#1760c8;--o:#ff6a00;--o2:#ff8d32;--w:#f7faff;--m:#9fb0c7;--l:rgba(255,255,255,.10)}
+*{box-sizing:border-box}html,body{min-height:100%;margin:0}body{background:radial-gradient(circle at 12% 5%,rgba(23,96,200,.28),transparent 30%),radial-gradient(circle at 88% 10%,rgba(255,106,0,.17),transparent 26%),linear-gradient(145deg,#030913,#07152f 55%,#040a15);color:var(--w);font:15px/1.5 Inter,system-ui,-apple-system,"Segoe UI",Arial,sans-serif;overflow-x:hidden}
+body:before{content:"";position:fixed;inset:0;z-index:-1;opacity:.16;background-image:linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px);background-size:42px 42px}
+.shell{width:min(980px,92vw);margin:auto;padding:28px 0 22px}.top{display:flex;align-items:center;justify-content:space-between;gap:16px}.brand{display:flex;align-items:center;gap:12px}.logo{width:52px;height:52px;border-radius:14px;background:#fff;object-fit:cover;box-shadow:0 10px 30px rgba(0,0,0,.35)}.brand b{display:block;font-size:14px;letter-spacing:.08em}.brand small{color:var(--m);font-size:9px;letter-spacing:.12em}.pill{border:1px solid var(--l);background:rgba(255,255,255,.05);padding:8px 12px;border-radius:999px;color:#cbd8e8;font-size:10px}
+.hero{text-align:center;padding:62px 8px 28px}.kicker{display:inline-flex;gap:8px;align-items:center;border:1px solid var(--l);background:rgba(255,255,255,.045);border-radius:999px;padding:7px 12px;color:#d9e6f8;font-size:10px;letter-spacing:.12em}.dot{width:7px;height:7px;border-radius:50%;background:#40e292;box-shadow:0 0 15px #40e292}.hero h1{font-size:clamp(42px,8vw,78px);line-height:.95;letter-spacing:-.055em;margin:20px 0 12px}.grad{background:linear-gradient(100deg,#fff 15%,#dce9ff 48%,#ff8d32 92%);-webkit-background-clip:text;background-clip:text;color:transparent}.hero p{max-width:600px;margin:auto;color:var(--m);font-size:13px}.card{margin-top:20px;border:1px solid var(--l);background:rgba(8,24,50,.72);border-radius:22px;padding:22px;box-shadow:0 24px 70px rgba(0,0,0,.35);backdrop-filter:blur(18px)}.row{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:14px}.row h2{font-size:16px;margin:0}.row span{font-size:9px;color:var(--m);letter-spacing:.1em}.console{min-height:150px;margin:0;border:1px solid var(--l);border-radius:15px;background:rgba(0,0,0,.22);padding:17px;text-align:left;font:12px/1.8 ui-monospace,SFMono-Regular,Consolas,monospace;color:#b8c7db;white-space:pre-wrap;overflow:auto}.ok{color:#55e69a}.bad{color:#ff7474}.warn{color:#ffb45e}.foot{display:flex;justify-content:space-between;color:#617590;font-size:9px;padding:18px 2px 0}@media(max-width:560px){.pill{display:none}.hero{padding-top:45px}.shell{width:94vw}.card{padding:16px}}
+</style>
+<script>
+if (window.applicationCache && window.applicationCache.status == 0) {
+    window.location.replace("cache.html");
+}
+</script>
+</head>
+<body>
+<div class="shell">
+<header class="top"><div class="brand"><img class="logo" src="elrabi3-logo.png" alt="ELRABI3"><div><b>ELRABI3_COMPANY</b><small>PLAYSTATION SERVICE · ALEXANDRIA</small></div></div><div class="pill">PS4 HOST · LOCAL</div></header>
+<section class="hero"><div class="kicker"><span class="dot"></span> ELRABI3 COMPANY HOST</div><h1><span class="grad">ELRABI3</span><br>COMPANY</h1><p>Modern branded interface. Original host and execution logic are preserved.</p></section>
+<section class="card"><div class="row"><h2>System Status</h2><span>ORIGINAL HOST FLOW</span></div><pre id="console"></pre></section>
+<footer class="foot"><span>© 2026 ELRABI3_COMPANY</span><span>Original project logic preserved</span></footer>
+</div>
+<script>
+(function () {
+    var con = document.getElementById("console");
+
+    function print(msg, cls) {
+        var span = document.createElement("span");
+        if (cls) span.className = cls;
+        span.textContent = msg + "\n";
+        con.appendChild(span);
+    }
+
+    var params = new URLSearchParams(location.search);
+
+    // Firmwares with measured kernel table — KEEP IN SYNC with ps4_offsets.js
+    var SUPPORTED = { 1302: 1, 1304: 1, 1350: 1, 1352: 1 };
+
+    var key = null, fwnum = null;
+    var m = /PlayStation\s+4[\/ ](\d+)\.(\d+)/.exec(navigator.userAgent);
+    if (m) {
+        var ms = parseInt(m[2], 16).toString(16);
+        if (ms.length < 2) ms = "0" + ms;
+        key = m[1] + "." + ms;
+        fwnum = parseInt(m[1], 10) * 100 + parseInt(ms, 10);
+    }
+
+    var forced    = params.get("force") === "1";
+    var supported = forced || (fwnum !== null && SUPPORTED[fwnum] === 1);
+
+    print("firmware: " + (key || "unknown"));
+    print("supported: " + (supported ? "yes" : "no"), supported ? "ok" : "bad");
+
+    var target = "exploit.html" + location.search;
+
+    function go() {
+        print("loading exploit...", "warn");
+        location.replace(target);
+    }
+
+    function waitForTap(msg, action) {
+        print(msg, "warn");
+        function fire() {
+            window.removeEventListener("click",   fire);
+            window.removeEventListener("keydown", fire);
+            action();
+        }
+        window.addEventListener("click",   fire);
+        window.addEventListener("keydown", fire);
+    }
+
+    if (!supported) {
+        print("UNSUPPORTED FIRMWARE — tap / press X to run anyway", "bad");
+        waitForTap("", go);
+        return;
+    }
+
+    var ac = window.applicationCache;
+    if (!ac || !document.documentElement.hasAttribute("manifest")) {
+        go();
+    } else if (!navigator.onLine) {
+        print("offline — running from cache", "ok");
+        go();
+    } else if (ac.status === ac.IDLE) {
+        print("cached", "ok");
+        go();
+    } else if (ac.status === ac.UPDATEREADY) {
+        try { ac.swapCache(); } catch (e) {}
+        print("update downloaded", "ok");
+        waitForTap("UPDATE READY — tap / press X to reload", function () { location.reload(); });
+    } else {
+        print("checking cache...");
+        ac.addEventListener("downloading",
+            function () { print("caching for offline (first run)..."); }, false);
+        ac.addEventListener("progress", function (e) {
+            if (e && e.total)
+                print("caching " + Math.round((e.loaded / e.total) * 100) + "%");
+        }, false);
+        ac.addEventListener("cached", function () {
+            print("cached for offline use", "ok");
+            waitForTap("CACHED — tap / press X to run", go);
+        }, false);
+        ac.addEventListener("updateready", function () {
+            try { ac.swapCache(); } catch (e) {}
+            print("update downloaded", "ok");
+            waitForTap("UPDATE READY — tap / press X to reload",
+                       function () { location.reload(); });
+        }, false);
+        ac.addEventListener("noupdate", function () {
+            print("cached — offline ready", "ok");
+            go();
+        }, false);
+        ac.addEventListener("error", function () {
+            print("cache unavailable");
+            waitForTap("CACHE FAILED — tap / press X to run anyway", go);
+        }, false);
+        ac.addEventListener("obsolete", function () {
+            print("cache obsolete");
+            waitForTap("CACHE OBSOLETE — tap / press X to run", go);
+        }, false);
+    }
+})();
+</script>
+</html>
